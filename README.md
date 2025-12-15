@@ -28,3 +28,4 @@ For detailed information, see [INFO.md](INFO.md).
 Unlicense - This is free and unencumbered software released into the public domain.
 
 
+![Google Chrome](https://img.shields.io/badge/Google%20Chrome-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white)
