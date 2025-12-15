@@ -26,3 +26,5 @@ For detailed information, see [INFO.md](INFO.md).
 ## License
 
 Unlicense - This is free and unencumbered software released into the public domain.
+
+[![Build Status](https://travis-ci.com/username/projectname.svg?branch=master)](https://travis-ci.com/username/projectname)
