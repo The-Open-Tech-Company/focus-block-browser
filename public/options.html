@@ -4,85 +4,449 @@
     <meta charset="UTF-8" />
     <title>The Open Tech Company - Focus Blocker Settings</title>
     <style>
+      :root {
+        --bg-primary: rgba(255, 255, 255, 0.6);
+        --bg-secondary: rgba(255, 255, 255, 0.4);
+        --bg-hover: rgba(255, 255, 255, 0.8);
+        --text-primary: #1a1a1a;
+        --text-secondary: #666;
+        --text-tertiary: #888;
+        --border-color: rgba(255, 255, 255, 0.4);
+        --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.08);
+        --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.12);
+        --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.16);
+        --accent-color: #4169e1;
+        --accent-hover: #3159d1;
+        --success-color: #4caf50;
+        --danger-color: #ff6b6b;
+        --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        --gradient-dark: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      }
+
+      [data-theme="dark"] {
+        --bg-primary: rgba(30, 30, 46, 0.8);
+        --bg-secondary: rgba(30, 30, 46, 0.6);
+        --bg-hover: rgba(40, 40, 56, 0.9);
+        --text-primary: #e0e0e0;
+        --text-secondary: #b0b0b0;
+        --text-tertiary: #888;
+        --border-color: rgba(255, 255, 255, 0.1);
+        --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+        --accent-color: #5a7de8;
+        --accent-hover: #4a6dd8;
+        --gradient-bg: var(--gradient-dark);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: -1000px 0;
+        }
+        100% {
+          background-position: 1000px 0;
+        }
+      }
+
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      @keyframes glow {
+        0%, 100% {
+          box-shadow: 0 0 20px rgba(65, 105, 225, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(65, 105, 225, 0.5);
+        }
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.8;
+          transform: scale(1.05);
+        }
+      }
+
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes zoomIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes ripple {
+        0% {
+          transform: scale(0);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         padding: 0;
         margin: 0;
-        background-color: #f5f5f5;
-        min-width: 800px;
+        background: var(--gradient-bg);
+        min-width: 1000px;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        transition: background 0.5s ease;
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        background-size: 40px 40px;
+        animation: shimmer 25s linear infinite;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      [data-theme="dark"] body::before {
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
       }
 
       .header {
-        background: white;
-        border-bottom: 1px solid #e0e0e0;
-        padding: 15px 20px;
+        background: var(--bg-primary);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px 30px;
         display: flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 20px;
+        justify-content: space-between;
+        position: relative;
+        z-index: 10;
+        box-shadow: var(--shadow-sm);
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
       }
 
       .header-logo {
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        animation: scaleIn 0.6s ease-out, float 3s ease-in-out infinite 1s;
       }
 
       .header-link-container {
         display: flex;
         align-items: center;
         flex-direction: column;
-        gap: 1px;
+        gap: 2px;
       }
 
       .header-link {
         text-decoration: none;
-        color: #333;
-        font-size: 16px;
-        font-weight: 500;
-        transition: color 0.2s;
+        color: var(--text-primary);
+        font-size: 18px;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        letter-spacing: -0.3px;
       }
 
       .header-link:hover {
-        color: #4169e1;
+        color: var(--accent-color);
+        transform: translateY(-1px);
       }
 
-      .content {
-        padding: 0 20px 20px 20px;
-        max-width: 1200px;
-        margin: 0 auto;
+      .lang-switcher {
+        display: flex;
+        background: var(--bg-secondary);
+        border-radius: 24px;
+        padding: 3px;
+        gap: 3px;
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--border-color);
       }
 
-      .settings-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+      .lang-btn {
+        padding: 8px 16px;
+        border: none;
+        background: transparent;
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .lang-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: left 0.5s;
+      }
+
+      .lang-btn:hover::before {
+        left: 100%;
+      }
+
+      .lang-btn.active {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+        box-shadow: var(--shadow-sm);
+        transform: scale(1.05);
+      }
+
+      .main-container {
+        display: flex;
+        min-height: calc(100vh - 80px);
+        position: relative;
+        z-index: 5;
+      }
+
+      .sidebar {
+        width: 240px;
+        background: var(--bg-primary);
+        backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        border-right: 1px solid var(--border-color);
+        padding: 24px 0;
+        box-shadow: var(--shadow-md);
+        animation: slideInLeft 0.6s ease-out;
+      }
+
+      .sidebar-item {
+        padding: 14px 24px;
+        color: var(--text-secondary);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        border-left: 3px solid transparent;
+        animation: slideInLeft 0.6s ease-out both;
+      }
+
+      .sidebar-item:nth-child(1) { animation-delay: 0.1s; }
+      .sidebar-item:nth-child(2) { animation-delay: 0.15s; }
+      .sidebar-item:nth-child(3) { animation-delay: 0.2s; }
+      .sidebar-item:nth-child(4) { animation-delay: 0.25s; }
+      .sidebar-item:nth-child(5) { animation-delay: 0.3s; }
+
+      .sidebar-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background: var(--accent-color);
+        transform: scaleY(0);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .sidebar-item:hover {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+        padding-left: 28px;
+        transform: translateX(4px);
+      }
+
+      .sidebar-item.active {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+        border-left-color: var(--accent-color);
+        font-weight: 600;
+      }
+
+      .sidebar-item.active::before {
+        transform: scaleY(1);
+      }
+
+      .content-area {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+      }
+
+      .content-section {
+        display: none;
+        animation: fadeIn 0.5s ease-out, slideInRight 0.5s ease-out;
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      .section-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+        animation: slideUp 0.6s ease-out;
+      }
+
+      .section-subtitle {
+        font-size: 14px;
+        color: var(--text-secondary);
         margin-bottom: 30px;
+        animation: slideUp 0.6s ease-out 0.1s both;
       }
 
-      h1 {
-        font-size: 20px;
-        margin: 0 0 20px 0;
-        color: #333;
+      .settings-card {
+        background: var(--bg-primary);
+        backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        border-radius: 24px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--border-color);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: scaleIn 0.6s ease-out both;
       }
 
-      .settings-container {
-        background: white;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        height: fit-content;
-      }
+      .settings-card:nth-child(1) { animation-delay: 0.2s; }
+      .settings-card:nth-child(2) { animation-delay: 0.3s; }
+      .settings-card:nth-child(3) { animation-delay: 0.4s; }
 
-      .settings-container.full-width {
-        grid-column: 1 / -1;
+      .settings-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.6);
       }
 
       .setting-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 0;
-        border-bottom: 1px solid #eee;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border-color);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideInLeft 0.5s ease-out both;
+      }
+
+      .setting-item:nth-child(1) { animation-delay: 0.1s; }
+      .setting-item:nth-child(2) { animation-delay: 0.15s; }
+      .setting-item:nth-child(3) { animation-delay: 0.2s; }
+      .setting-item:nth-child(4) { animation-delay: 0.25s; }
+      .setting-item:nth-child(5) { animation-delay: 0.3s; }
+      .setting-item:nth-child(6) { animation-delay: 0.35s; }
+      .setting-item:nth-child(7) { animation-delay: 0.4s; }
+      .setting-item:nth-child(8) { animation-delay: 0.45s; }
+
+      .setting-item:hover {
+        padding-left: 12px;
+        padding-right: 12px;
+        background: var(--bg-hover);
+        border-radius: 12px;
+        margin: 0 -12px;
       }
 
       .setting-item:last-child {
@@ -91,250 +455,992 @@
 
       .setting-label {
         font-size: 14px;
-        color: #555;
+        color: var(--text-primary);
         flex: 1;
+        font-weight: 500;
       }
 
       .setting-label-secondary {
         font-size: 12px;
-        color: #888;
-        margin-top: 2px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+        font-weight: 400;
       }
 
       .toggle {
         position: relative;
-        width: 44px;
-        height: 24px;
-        background: #ccc;
-        border-radius: 24px;
+        width: 52px;
+        height: 28px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 28px;
         cursor: pointer;
-        transition: background 0.3s;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid var(--border-color);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .toggle:hover {
+        transform: scale(1.05);
       }
 
       .toggle.active {
-        background: #4caf50;
+        background: linear-gradient(135deg, var(--success-color) 0%, #45a049 100%);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
       }
 
       .toggle-slider {
         position: absolute;
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         background: white;
         border-radius: 50%;
-        top: 2px;
-        left: 2px;
-        transition: transform 0.3s;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        top: 1px;
+        left: 1px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       }
 
       .toggle.active .toggle-slider {
-        transform: translateX(20px);
+        transform: translateX(24px);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .domain-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .domain-item {
+        background: var(--bg-secondary);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 12px;
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideUp 0.5s ease-out both;
+      }
+
+      .domain-item:nth-child(1) { animation-delay: 0.1s; }
+      .domain-item:nth-child(2) { animation-delay: 0.15s; }
+      .domain-item:nth-child(3) { animation-delay: 0.2s; }
+      .domain-item:nth-child(4) { animation-delay: 0.25s; }
+      .domain-item:nth-child(5) { animation-delay: 0.3s; }
+
+      .domain-item:hover {
+        transform: translateX(4px);
+        box-shadow: var(--shadow-sm);
+        background: var(--bg-hover);
+      }
+
+      .domain-name {
+        font-family: 'SF Mono', 'Monaco', monospace;
+        font-size: 13px;
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .domain-remove {
+        background: var(--danger-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .domain-remove::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
+
+      .domain-remove:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      .domain-remove:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+      }
+
+      .add-domain-btn {
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+        color: white;
+        border: none;
+        border-radius: 16px;
+        padding: 14px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-top: 20px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(65, 105, 225, 0.3);
+        animation: glow 2s ease-in-out infinite;
+      }
+
+      .add-domain-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
+
+      .add-domain-btn:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      .add-domain-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(65, 105, 225, 0.4);
+      }
+
+      .add-domain-btn:active {
+        transform: translateY(0);
+      }
+
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      .modal-overlay.show {
+        display: flex;
+      }
+
+      .modal {
+        background: var(--bg-primary);
+        backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        border-radius: 24px;
+        padding: 32px;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--border-color);
+        animation: zoomIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+      }
+
+      .modal-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+        letter-spacing: -0.3px;
+      }
+
+      .modal-subtitle {
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+      }
+
+      .modal-input {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 14px;
+        font-family: 'SF Mono', 'Monaco', monospace;
+        background: var(--bg-secondary);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        color: var(--text-primary);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: 24px;
+      }
+
+      .modal-input:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
+        background: var(--bg-hover);
+      }
+
+      .modal-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+      }
+
+      .modal-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .modal-btn-primary {
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(65, 105, 225, 0.3);
+      }
+
+      .modal-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(65, 105, 225, 0.4);
+      }
+
+      .modal-btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+      }
+
+      .modal-btn-secondary:hover {
+        background: var(--bg-hover);
+      }
+
+      .color-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      input[type="color"] {
+        width: 60px;
+        height: 36px;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow-sm);
+      }
+
+      input[type="color"]:hover {
+        transform: scale(1.1);
+        box-shadow: var(--shadow-md);
+      }
+
+      input[type="range"] {
+        width: 120px;
+        height: 6px;
+        border-radius: 3px;
+        background: rgba(0, 0, 0, 0.1);
+        outline: none;
+        -webkit-appearance: none;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(65, 105, 225, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+        box-shadow: 0 4px 12px rgba(65, 105, 225, 0.6);
+      }
+
+      input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 8px rgba(65, 105, 225, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      input[type="range"]::-moz-range-thumb:hover {
+        transform: scale(1.2);
+        box-shadow: 0 4px 12px rgba(65, 105, 225, 0.6);
+      }
+
+      .color-value, .opacity-value {
+        font-size: 13px;
+        color: var(--text-secondary);
+        font-weight: 500;
+        min-width: 70px;
+        font-family: 'SF Mono', 'Monaco', monospace;
+      }
+
+      .opacity-value {
+        min-width: 45px;
       }
 
       .save-status {
-        margin-top: 15px;
+        margin-top: 20px;
         text-align: center;
-        color: #4caf50;
-        font-size: 14px;
+        color: var(--success-color);
+        font-size: 15px;
+        font-weight: 600;
         opacity: 0;
-        transition: opacity 0.3s;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(-10px);
+        padding: 12px;
+        background: rgba(76, 175, 80, 0.1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 12px;
+        border: 1px solid rgba(76, 175, 80, 0.3);
       }
 
       .save-status.show {
         opacity: 1;
+        transform: translateY(0);
       }
 
-      .reload-notice {
-        background: #fff3cd;
-        border: 1px solid #ffe082;
-        color: #856404;
-        padding: 12px 16px;
-        border-radius: 6px;
-        font-size: 13px;
-        margin-bottom: 20px;
+      .about-section {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .about-item {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 16px;
+        padding: 20px;
+        background: var(--bg-secondary);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideUp 0.5s ease-out both;
       }
 
-      .reload-notice svg {
-        width: 16px;
-        height: 16px;
-        flex-shrink: 0;
+      .about-item:nth-child(1) { animation-delay: 0.1s; }
+      .about-item:nth-child(2) { animation-delay: 0.2s; }
+      .about-item:nth-child(3) { animation-delay: 0.3s; }
+
+      .about-item:hover {
+        transform: translateX(8px);
+        box-shadow: var(--shadow-sm);
+        background: var(--bg-hover);
+      }
+
+      .about-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        min-width: 120px;
+      }
+
+      .about-value {
+        font-size: 14px;
+        color: var(--text-secondary);
+        flex: 1;
+      }
+
+      .about-link {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .about-link:hover {
+        color: var(--accent-hover);
+        text-decoration: underline;
+      }
+
+      .reset-btn {
+        background: linear-gradient(135deg, var(--danger-color) 0%, #ee5a6f 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+      }
+
+      .reset-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
+
+      .reset-btn:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      .reset-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-secondary);
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      /* Accessibility mode - black text on white background, simple toggle animations only */
+      [data-accessibility="true"] body {
+        background: #ffffff !important;
+      }
+
+      [data-accessibility="true"] body::before {
+        display: none !important;
+      }
+
+      [data-accessibility="true"] *,
+      [data-accessibility="true"] *::before,
+      [data-accessibility="true"] *::after {
+        color: #000000 !important;
+        background: #ffffff !important;
+        border-color: #000000 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        text-shadow: none !important;
+        animation: none !important;
+        transform: none !important;
+      }
+
+      /* Keep toggle animations - must be before general transition disable */
+      [data-accessibility="true"] .toggle {
+        width: 52px !important;
+        height: 28px !important;
+        background: #cccccc !important;
+        border: 2px solid #000000 !important;
+        border-radius: 0 !important;
+        transition: background 0.3s ease !important;
+        position: relative !important;
+      }
+
+      [data-accessibility="true"] .toggle.active {
+        background: #000000 !important;
+      }
+
+      [data-accessibility="true"] .toggle-slider {
+        width: 22px !important;
+        height: 22px !important;
+        top: 1px !important;
+        left: 1px !important;
+        background: #ffffff !important;
+        border: 1px solid #000000 !important;
+        border-radius: 0 !important;
+        transition: transform 0.3s ease !important;
+        box-shadow: none !important;
+        position: absolute !important;
+      }
+
+      [data-accessibility="true"] .toggle.active .toggle-slider {
+        background: #ffffff !important;
+        transform: translateX(24px) !important;
+      }
+
+      /* Disable transitions for all except toggles */
+      [data-accessibility="true"] *:not(.toggle):not(.toggle-slider),
+      [data-accessibility="true"] *:not(.toggle):not(.toggle-slider)::before,
+      [data-accessibility="true"] *:not(.toggle):not(.toggle-slider)::after {
+        transition: none !important;
+      }
+
+      /* Toggle labels */
+      .toggle-label-text {
+        font-size: 12px;
+        font-weight: 600;
+        min-width: 35px;
+        text-align: left;
+        font-family: 'SF Mono', 'Monaco', monospace;
+      }
+
+      [data-accessibility="true"] .toggle-label-text {
+        color: #000000 !important;
+      }
+
+      /* Keep simple hover effects for interactive elements */
+      [data-accessibility="true"] .toggle:hover {
+        opacity: 0.8;
+      }
+
+      /* Override colors for specific elements */
+      [data-accessibility="true"] .header,
+      [data-accessibility="true"] .settings-card,
+      [data-accessibility="true"] .domain-item,
+      [data-accessibility="true"] .about-item,
+      [data-accessibility="true"] .sidebar-item,
+      [data-accessibility="true"] .modal,
+      [data-accessibility="true"] .info-text {
+        background: #ffffff !important;
+        border: 1px solid #000000 !important;
+        border-radius: 0 !important;
+        color: #000000 !important;
+      }
+
+      [data-accessibility="true"] .settings-card:hover,
+      [data-accessibility="true"] .domain-item:hover,
+      [data-accessibility="true"] .about-item:hover,
+      [data-accessibility="true"] .sidebar-item:hover {
+        background: #f0f0f0 !important;
+      }
+
+      [data-accessibility="true"] .sidebar-item.active {
+        background: #e0e0e0 !important;
+        border-left: 3px solid #000000 !important;
+      }
+
+      [data-accessibility="true"] .add-domain-btn,
+      [data-accessibility="true"] .reset-btn,
+      [data-accessibility="true"] .modal-btn-primary {
+        background: #000000 !important;
+        color: #ffffff !important;
+        border: 1px solid #000000 !important;
+        border-radius: 0 !important;
+      }
+
+      [data-accessibility="true"] .add-domain-btn:hover,
+      [data-accessibility="true"] .reset-btn:hover,
+      [data-accessibility="true"] .modal-btn-primary:hover {
+        background: #333333 !important;
+      }
+
+      [data-accessibility="true"] .modal-btn-secondary {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border: 1px solid #000000 !important;
+        border-radius: 0 !important;
+      }
+
+      [data-accessibility="true"] .modal-btn-secondary:hover {
+        background: #f0f0f0 !important;
+      }
+
+      [data-accessibility="true"] .status-badge.active {
+        background: #000000 !important;
+        color: #ffffff !important;
+        border-radius: 0 !important;
+      }
+
+      [data-accessibility="true"] .status-badge.inactive {
+        background: #666666 !important;
+        color: #ffffff !important;
+        border-radius: 0 !important;
+      }
+
+      [data-accessibility="true"] .header-link,
+      [data-accessibility="true"] .about-link {
+        color: #000000 !important;
+        text-decoration: underline !important;
+      }
+
+      [data-accessibility="true"] .header-link:hover,
+      [data-accessibility="true"] .about-link:hover {
+        color: #333333 !important;
+      }
+
+      [data-accessibility="true"] .lang-switcher {
+        background: #ffffff !important;
+        border: 1px solid #000000 !important;
+        border-radius: 0 !important;
+      }
+
+      [data-accessibility="true"] .lang-btn {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border-radius: 0 !important;
+      }
+
+      [data-accessibility="true"] .lang-btn.active {
+        background: #000000 !important;
+        color: #ffffff !important;
+      }
+
+      [data-accessibility="true"] .lang-btn::before {
+        display: none !important;
+      }
+
+      [data-accessibility="true"] input[type="color"],
+      [data-accessibility="true"] input[type="range"],
+      [data-accessibility="true"] textarea,
+      [data-accessibility="true"] .modal-input {
+        background: #ffffff !important;
+        border: 1px solid #000000 !important;
+        border-radius: 0 !important;
+        color: #000000 !important;
+      }
+
+      [data-accessibility="true"] input[type="color"]:focus,
+      [data-accessibility="true"] textarea:focus,
+      [data-accessibility="true"] .modal-input:focus {
+        border-color: #000000 !important;
+        box-shadow: none !important;
+      }
+
+      [data-accessibility="true"] input[type="range"]::-webkit-slider-thumb {
+        background: #000000 !important;
+        border: 1px solid #000000 !important;
+        border-radius: 0 !important;
+      }
+
+      [data-accessibility="true"] input[type="range"]::-moz-range-thumb {
+        background: #000000 !important;
+        border: 1px solid #000000 !important;
+        border-radius: 0 !important;
+      }
+
+      [data-accessibility="true"] #theme-switcher .lang-btn[data-theme="dark"] {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+
+      [data-accessibility="true"] .domain-remove {
+        background: #000000 !important;
+        color: #ffffff !important;
+        border: 1px solid #000000 !important;
+        border-radius: 0 !important;
+      }
+
+      [data-accessibility="true"] .domain-remove:hover {
+        background: #333333 !important;
+      }
+
+      [data-accessibility="true"] .domain-remove::before {
+        display: none !important;
       }
     </style>
   </head>
   <body>
     <div class="header">
-      <img src="../assets/icon.svg" alt="The Open Tech Company" class="header-logo" />
-      <div class="header-link-container">
-        <a href="https://github.com/The-Open-Tech-Company/focus-block-browser" target="_blank" class="header-link">The Open Tech Company</a>
-        <div>Focus Blocker</div>
+      <div class="header-left">
+        <img src="../assets/icon.svg" alt="The Open Tech Company" class="header-logo" />
+        <div class="header-link-container">
+          <a href="https://github.com/The-Open-Tech-Company/focus-block-browser" target="_blank" class="header-link">The Open Tech Company</a>
+          <div style="font-size: 14px; color: var(--text-secondary); font-weight: 500;">Focus Blocker</div>
+        </div>
       </div>
     </div>
-    <div class="content">
-      <div class="reload-notice">
-        <svg fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-        <div>
-          <div>После изменения настроек необходимо перезагрузить страницу, где используется расширение</div>
-          <div style="margin-top: 4px; font-size: 12px; opacity: 0.8">
-            After changing settings, you need to reload the page where the extension is used
-          </div>
+    <div class="main-container">
+      <div class="sidebar">
+        <div class="sidebar-item active" data-section="general">
+          <span data-i18n="sidebar.general">Общие</span>
+        </div>
+        <div class="sidebar-item" data-section="domains">
+          <span data-i18n="sidebar.domains">Настройки доменов</span>
+        </div>
+        <div class="sidebar-item" data-section="focus">
+          <span data-i18n="sidebar.focus">Настройка блокировки фокуса</span>
+        </div>
+        <div class="sidebar-item" data-section="copy">
+          <span data-i18n="sidebar.copy">Настройка для помощи при копировании</span>
+        </div>
+        <div class="sidebar-item" data-section="accessibility">
+          <span data-i18n="sidebar.accessibility">Адаптация</span>
+        </div>
+        <div class="sidebar-item" data-section="about">
+          <span data-i18n="sidebar.about">О расширении</span>
         </div>
       </div>
-      <div class="settings-grid">
-        <div class="settings-container full-width">
-          <h2 style="font-size: 16px; margin: 0 0 15px 0; color: #333">
-            Blacklist Domains<br /><span style="font-size: 14px; color: #666; font-weight: normal"
-              >Домены, где расширение НЕ работает</span
-            >
-          </h2>
-          <div style="margin-bottom: 15px">
-            <textarea
-              id="blacklistDomains"
-              placeholder="Введите домены по одному на строку&#10;example.com&#10;*.subdomain.com"
-              style="width: 100%; min-height: 120px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: monospace; font-size: 13px; resize: vertical"
-            ></textarea>
-            <div style="margin-top: 8px; font-size: 12px; color: #666">
-              <div>• Введите домены по одному на строку</div>
-              <div>• Используйте * для поддоменов (например: *.example.com)</div>
-              <div>• Расширение не будет работать на указанных доменах</div>
+      <div class="content-area">
+        <div class="content-section active" id="general-section">
+          <h1 class="section-title" data-i18n="general.title">Общие</h1>
+          <p class="section-subtitle" data-i18n="general.subtitle">Основные настройки расширения</p>
+          <div class="settings-card">
+            <div class="setting-item">
+              <div class="setting-label">
+                <div data-i18n="general.language">Язык интерфейса</div>
+                <div class="setting-label-secondary" data-i18n="general.languageSub">Выберите язык интерфейса</div>
+              </div>
+              <div class="lang-switcher">
+                <button class="lang-btn" data-lang="ru">RU</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+              </div>
+            </div>
+            <div class="setting-item">
+              <div class="setting-label">
+                <div data-i18n="general.theme">Тема оформления</div>
+                <div class="setting-label-secondary" data-i18n="general.themeSub">Выберите светлую или темную тему</div>
+              </div>
+              <div class="lang-switcher" id="theme-switcher">
+                <button class="lang-btn" data-theme="light" data-i18n="general.light">Светлая</button>
+                <button class="lang-btn" data-theme="dark" data-i18n="general.dark">Тёмная</button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="settings-container">
-          <h2 style="font-size: 16px; margin: 0 0 15px 0; color: #333">
-            Focus Blocker Events<br /><span style="font-size: 14px; color: #666; font-weight: normal"
-              >События блокировки фокуса</span
-            >
-          </h2>
-          <div class="setting-item">
-            <div class="setting-label">
-              <div>visibilitychange</div>
-              <div class="setting-label-secondary">Изменение видимости</div>
+
+        <div class="content-section" id="domains-section">
+          <h1 class="section-title" data-i18n="domains.title">Настройки доменов</h1>
+          <p class="section-subtitle" data-i18n="domains.subtitle">Управление доменами в blacklist</p>
+          <div class="settings-card">
+            <div class="domain-list" id="domainList">
+              <!-- Domains will be added here dynamically -->
             </div>
-            <div class="toggle active" data-event="visibilitychange">
-              <div class="toggle-slider"></div>
-            </div>
+            <button class="add-domain-btn" id="addDomainBtn">
+              <span data-i18n="domains.add">Добавить домен</span>
+            </button>
           </div>
-          <div class="setting-item">
-            <div class="setting-label">
-              <div>webkitvisibilitychange</div>
-              <div class="setting-label-secondary">Изменение видимости (webkit)</div>
+        </div>
+
+        <div class="content-section" id="focus-section">
+          <h1 class="section-title" data-i18n="focus.title">Настройка блокировки фокуса</h1>
+          <p class="section-subtitle" data-i18n="focus.subtitle">Выберите события для блокировки</p>
+          <div class="settings-card">
+            <div class="setting-item">
+              <div class="setting-label">
+                <div>visibilitychange</div>
+                <div class="setting-label-secondary" data-i18n="events.visibilitychange"></div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="toggle active" data-event="visibilitychange">
+                  <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label-text" data-toggle-label="visibilitychange">ON</span>
+              </div>
             </div>
-            <div class="toggle active" data-event="webkitvisibilitychange">
-              <div class="toggle-slider"></div>
+            <div class="setting-item">
+              <div class="setting-label">
+                <div>webkitvisibilitychange</div>
+                <div class="setting-label-secondary" data-i18n="events.webkitvisibilitychange"></div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="toggle active" data-event="webkitvisibilitychange">
+                  <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label-text" data-toggle-label="webkitvisibilitychange">ON</span>
+              </div>
             </div>
-          </div>
-          <div class="setting-item">
-            <div class="setting-label">
-              <div>mozvisibilitychange</div>
-              <div class="setting-label-secondary">Изменение видимости (moz)</div>
+            <div class="setting-item">
+              <div class="setting-label">
+                <div>mozvisibilitychange</div>
+                <div class="setting-label-secondary" data-i18n="events.mozvisibilitychange"></div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="toggle active" data-event="mozvisibilitychange">
+                  <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label-text" data-toggle-label="mozvisibilitychange">ON</span>
+              </div>
             </div>
-            <div class="toggle active" data-event="mozvisibilitychange">
-              <div class="toggle-slider"></div>
+            <div class="setting-item">
+              <div class="setting-label">
+                <div>msvisibilitychange</div>
+                <div class="setting-label-secondary" data-i18n="events.msvisibilitychange"></div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="toggle active" data-event="msvisibilitychange">
+                  <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label-text" data-toggle-label="msvisibilitychange">ON</span>
+              </div>
             </div>
-          </div>
-          <div class="setting-item">
-            <div class="setting-label">
-              <div>msvisibilitychange</div>
-              <div class="setting-label-secondary">Изменение видимости (ms)</div>
+            <div class="setting-item">
+              <div class="setting-label">
+                <div>blur</div>
+                <div class="setting-label-secondary" data-i18n="events.blur"></div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="toggle active" data-event="blur">
+                  <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label-text" data-toggle-label="blur">ON</span>
+              </div>
             </div>
-            <div class="toggle active" data-event="msvisibilitychange">
-              <div class="toggle-slider"></div>
+            <div class="setting-item">
+              <div class="setting-label">
+                <div>focus</div>
+                <div class="setting-label-secondary" data-i18n="events.focus"></div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="toggle active" data-event="focus">
+                  <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label-text" data-toggle-label="focus">ON</span>
+              </div>
             </div>
-          </div>
-          <div class="setting-item">
-            <div class="setting-label">
-              <div>blur</div>
-              <div class="setting-label-secondary">Потеря фокуса</div>
+            <div class="setting-item">
+              <div class="setting-label">
+                <div>focusin</div>
+                <div class="setting-label-secondary" data-i18n="events.focusin"></div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="toggle active" data-event="focusin">
+                  <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label-text" data-toggle-label="focusin">ON</span>
+              </div>
             </div>
-            <div class="toggle active" data-event="blur">
-              <div class="toggle-slider"></div>
-            </div>
-          </div>
-          <div class="setting-item">
-            <div class="setting-label">
-              <div>focus</div>
-              <div class="setting-label-secondary">Получение фокуса</div>
-            </div>
-            <div class="toggle active" data-event="focus">
-              <div class="toggle-slider"></div>
-            </div>
-          </div>
-          <div class="setting-item">
-            <div class="setting-label">
-              <div>focusin</div>
-              <div class="setting-label-secondary">Вход фокуса</div>
-            </div>
-            <div class="toggle active" data-event="focusin">
-              <div class="toggle-slider"></div>
-            </div>
-          </div>
-          <div class="setting-item">
-            <div class="setting-label">
-              <div>focusout</div>
-              <div class="setting-label-secondary">Выход фокуса</div>
-            </div>
-            <div class="toggle active" data-event="focusout">
-              <div class="toggle-slider"></div>
+            <div class="setting-item">
+              <div class="setting-label">
+                <div>focusout</div>
+                <div class="setting-label-secondary" data-i18n="events.focusout"></div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="toggle active" data-event="focusout">
+                  <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label-text" data-toggle-label="focusout">ON</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="settings-container">
-          <h2 style="font-size: 16px; margin: 0 0 15px 0; color: #333">
-            Copy Helper Settings<br /><span style="font-size: 14px; color: #666; font-weight: normal"
-              >Настройки помощника копирования</span
-            >
-          </h2>
-          <div class="setting-item">
-            <div class="setting-label">
-              <div>Enable Highlighting</div>
-              <div class="setting-label-secondary">Включить подсветку</div>
+
+        <div class="content-section" id="copy-section">
+          <h1 class="section-title" data-i18n="copy.title">Настройка для помощи при копировании</h1>
+          <p class="section-subtitle" data-i18n="copy.subtitle">Настройки помощника копирования</p>
+          <div class="settings-card">
+            <div class="setting-item">
+              <div class="setting-label">
+                <div data-i18n="copy.enableHighlighting">Enable Highlighting</div>
+                <div class="setting-label-secondary" data-i18n="copy.enableHighlightingSub">Включить подсветку</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="toggle active" id="highlightEnabled">
+                  <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label-text" data-toggle-label="highlightEnabled">ON</span>
+              </div>
             </div>
-            <div class="toggle active" id="highlightEnabled">
-              <div class="toggle-slider"></div>
+            <div class="setting-item" id="borderColorSettings">
+              <div class="setting-label">
+                <div data-i18n="copy.borderColor">Border Color</div>
+                <div class="setting-label-secondary" data-i18n="copy.borderColorSub">Цвет рамки</div>
+              </div>
+              <div class="color-controls">
+                <input type="color" id="borderColor" value="#4169E1" />
+                <span id="borderColorValue" class="color-value">#4169E1</span>
+              </div>
             </div>
-          </div>
-          <div class="setting-item" id="borderColorSettings">
-            <div class="setting-label">
-              <div>Border Color</div>
-              <div class="setting-label-secondary">Цвет рамки</div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 10px">
-              <input
-                type="color"
-                id="borderColor"
-                value="#4169E1"
-                style="width: 50px; height: 30px; border: none; border-radius: 4px; cursor: pointer"
-              />
-              <span id="borderColorValue" style="font-size: 12px; color: #666">#4169E1</span>
-            </div>
-          </div>
-          <div class="setting-item" id="borderOpacitySettings">
-            <div class="setting-label">
-              <div>Border Opacity</div>
-              <div class="setting-label-secondary">Прозрачность рамки</div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 10px">
-              <input type="range" id="borderOpacity" min="0" max="100" value="100" style="width: 100px" />
-              <span id="borderOpacityValue" style="font-size: 12px; color: #666; min-width: 35px">100%</span>
+            <div class="setting-item" id="borderOpacitySettings">
+              <div class="setting-label">
+                <div data-i18n="copy.borderOpacity">Border Opacity</div>
+                <div class="setting-label-secondary" data-i18n="copy.borderOpacitySub">Прозрачность рамки</div>
+              </div>
+              <div class="color-controls">
+                <input type="range" id="borderOpacity" min="0" max="100" value="100" />
+                <span id="borderOpacityValue" class="opacity-value">100%</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="save-status" id="saveStatus">Settings saved! / Настройки сохранены!</div>
-      <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; color: #888; font-size: 12px;">
-        Created by <a href="https://github.com/The-Open-Tech-Company/focus-block-browser" target="_blank" style="color: #4169e1; text-decoration: none;">TOTC</a>. Powered by Open Source. 2025
+
+        <div class="content-section" id="accessibility-section">
+          <h1 class="section-title" data-i18n="accessibility.title">Адаптация</h1>
+          <p class="section-subtitle" data-i18n="accessibility.subtitle">Настройки доступности интерфейса</p>
+          <div class="settings-card">
+            <div class="setting-item">
+              <div class="setting-label">
+                <div data-i18n="accessibility.epilepsy">Для больных эпилепсией</div>
+                <div class="setting-label-secondary" data-i18n="accessibility.epilepsySub">Отключает все анимации и упрощает интерфейс</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="toggle" id="epilepsyMode">
+                  <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label-text" data-toggle-label="epilepsyMode">OFF</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-section" id="about-section">
+          <h1 class="section-title" data-i18n="about.title">О расширении</h1>
+          <p class="section-subtitle" data-i18n="about.subtitle">Информация о расширении Focus Blocker</p>
+          <div class="settings-card">
+            <div class="about-section">
+              <div class="about-item">
+                <div class="about-label" data-i18n="about.version">Версия</div>
+                <div class="about-value" id="extensionVersion">2.0.0</div>
+              </div>
+              <div class="about-item">
+                <div class="about-label" data-i18n="about.repository">Репозиторий</div>
+                <div class="about-value">
+                  <a href="https://github.com/The-Open-Tech-Company/focus-block-browser" target="_blank" class="about-link">GitHub</a>
+                </div>
+              </div>
+              <div class="about-item">
+                <div class="about-label" data-i18n="about.reset">Сброс настроек</div>
+                <div class="about-value">
+                  <button class="reset-btn" id="resetSettingsBtn" data-i18n="about.resetBtn">Сбросить настройки</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <div class="modal-overlay" id="domainModal">
+      <div class="modal">
+        <h2 class="modal-title" data-i18n="modal.title">Добавить домен</h2>
+        <p class="modal-subtitle" data-i18n="modal.subtitle">Введите домен для добавления в blacklist</p>
+        <input type="text" class="modal-input" id="domainInput" data-i18n-placeholder="modal.placeholder" placeholder="example.com" />
+        <div class="modal-buttons">
+          <button class="modal-btn modal-btn-secondary" id="modalCancel" data-i18n="modal.cancel">Отмена</button>
+          <button class="modal-btn modal-btn-primary" id="modalConfirm" data-i18n="modal.confirm">Готово</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="save-status" id="saveStatus"></div>
+
+    <script src="../src/i18n.js"></script>
     <script src="../src/options.js"></script>
   </body>
 </html>

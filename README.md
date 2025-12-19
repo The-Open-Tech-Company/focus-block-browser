@@ -23,9 +23,10 @@ Click the extension icon to toggle it on/off. Use the Settings button to configu
 
 For detailed information, see [INFO.md](INFO.md).
 
+## Version
+
+Current version: 2.0.0
+
 ## License
 
 Unlicense - This is free and unencumbered software released into the public domain.
-
-
-![Google Chrome](https://img.shields.io/badge/Google%20Chrome-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white)

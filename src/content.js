@@ -129,5 +129,4 @@
     blockedHandlers.clear();
   };
 
-  // Don't initialize until we receive settings
 })();

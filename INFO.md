@@ -116,6 +116,10 @@ focus-blocker-main/
 
 No build process required. The extension can be loaded directly from the source directory.
 
+## Version
+
+Current version: 2.0.0
+
 ## License
 
 Unlicense - This is free and unencumbered software released into the public domain.

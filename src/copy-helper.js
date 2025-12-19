@@ -11,7 +11,6 @@
   let borderOpacity = DEFAULT_BORDER_OPACITY;
   let isEnabled = false;
 
-  // Check if current domain is blacklisted (extension should NOT work)
   function checkBlacklist(blacklistDomains) {
     if (!blacklistDomains || blacklistDomains.length === 0) {
       return false;
@@ -35,13 +34,10 @@
         return regex.test(currentHost);
       }
       
-      // Exact match
       if (trimmedPattern === currentHost) {
         return true;
       }
       
-      // Check if current host is a subdomain of the pattern
-      // e.g., if pattern is "example.com", match "www.example.com", "sub.example.com", etc.
       if (currentHost.endsWith('.' + trimmedPattern) || currentHost === trimmedPattern) {
         return true;
       }
@@ -50,23 +46,25 @@
     });
   }
 
-  chrome.storage.sync.get(["highlightEnabled", "borderColor", "borderOpacity", "blacklistDomains", "whitelistDomains"], (result) => {
+  chrome.storage.sync.get(["highlightEnabled", "borderColor", "borderOpacity", "blacklistDomains", "whitelistDomains", "globalEnabled"], (result) => {
     highlightEnabled = result.highlightEnabled !== undefined ? result.highlightEnabled : DEFAULT_HIGHLIGHT_ENABLED;
     borderColor = result.borderColor || DEFAULT_BORDER_COLOR;
     borderOpacity = result.borderOpacity !== undefined ? result.borderOpacity : DEFAULT_BORDER_OPACITY;
     const blacklistDomains = result.blacklistDomains || result.whitelistDomains || DEFAULT_BLACKLIST_DOMAINS;
-    isEnabled = !checkBlacklist(blacklistDomains);
+    const globalEnabled = result.globalEnabled !== undefined ? result.globalEnabled : true;
+    isEnabled = globalEnabled && !checkBlacklist(blacklistDomains);
     updateStyles();
   });
 
   chrome.storage.onChanged.addListener((changes, namespace) => {
     if (namespace === "sync") {
-      chrome.storage.sync.get(["highlightEnabled", "borderColor", "borderOpacity", "blacklistDomains", "whitelistDomains"], (result) => {
+      chrome.storage.sync.get(["highlightEnabled", "borderColor", "borderOpacity", "blacklistDomains", "whitelistDomains", "globalEnabled"], (result) => {
         highlightEnabled = result.highlightEnabled !== undefined ? result.highlightEnabled : DEFAULT_HIGHLIGHT_ENABLED;
         borderColor = result.borderColor || DEFAULT_BORDER_COLOR;
         borderOpacity = result.borderOpacity !== undefined ? result.borderOpacity : DEFAULT_BORDER_OPACITY;
         const blacklistDomains = result.blacklistDomains || result.whitelistDomains || DEFAULT_BLACKLIST_DOMAINS;
-        isEnabled = !checkBlacklist(blacklistDomains);
+        const globalEnabled = result.globalEnabled !== undefined ? result.globalEnabled : true;
+        isEnabled = globalEnabled && !checkBlacklist(blacklistDomains);
         updateStyles();
       });
     }
@@ -107,6 +105,8 @@
 
   let currentElement = null;
   let copyInProgress = false;
+  let lastMouseX = 0;
+  let lastMouseY = 0;
 
   function clearAllHighlights() {
     document.querySelectorAll(`.${className}`).forEach((el) => {
@@ -120,6 +120,9 @@
     if (!isEnabled || copyInProgress) return;
 
     const isMetaKeyPressed = event.metaKey || event.ctrlKey;
+    
+    lastMouseX = event.clientX;
+    lastMouseY = event.clientY;
 
     clearAllHighlights();
     currentElement = null;
@@ -147,7 +150,9 @@
     const shouldCopy = isMetaKeyPressed && event.altKey;
 
     if (!highlightEnabled && shouldCopy) {
-      const element = document.elementFromPoint(event.clientX, event.clientY);
+      const x = lastMouseX || (window.innerWidth / 2);
+      const y = lastMouseY || (window.innerHeight / 2);
+      const element = document.elementFromPoint(x, y);
       if (element && element.nodeType === Node.ELEMENT_NODE && !copyInProgress) {
         currentElement = element;
       }
@@ -174,6 +179,12 @@
         if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(textToCopy);
         } else {
+          if (!document.body) {
+            console.error("document.body is not available");
+            copyInProgress = false;
+            return;
+          }
+          
           const textArea = document.createElement("textarea");
           textArea.value = textToCopy;
           textArea.style.position = "fixed";
@@ -190,7 +201,9 @@
             console.error("execCommand failed:", e);
           }
 
-          document.body.removeChild(textArea);
+          if (document.body.contains(textArea)) {
+            document.body.removeChild(textArea);
+          }
         }
 
         clearAllHighlights();
